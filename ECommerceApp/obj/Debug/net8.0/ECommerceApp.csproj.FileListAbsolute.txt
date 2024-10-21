@@ -28,3 +28,5 @@
 /root/ecommerce-pb/ECommerceApp/obj/Debug/net8.0/ECommerceApp.pdb
 /root/ecommerce-pb/ECommerceApp/obj/Debug/net8.0/ECommerceApp.genruntimeconfig.cache
 /root/ecommerce-pb/ECommerceApp/obj/Debug/net8.0/ref/ECommerceApp.dll
+/root/ecommerce-pb/ECommerceApp/obj/Debug/net8.0/ECommerceApp.sourcelink.json
+/root/ecommerce-pb/ECommerceApp/obj/Debug/net8.0/ECommerceApp.csproj.AssemblyReference.cache
