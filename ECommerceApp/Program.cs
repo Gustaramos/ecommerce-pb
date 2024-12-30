@@ -8,7 +8,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 if (connectionString is not null)
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options => 
-        options.UseSqlServer(connectionString));
+    {
+        options.UseNpgsql(connectionString);
+    });
 }
 else
 {
