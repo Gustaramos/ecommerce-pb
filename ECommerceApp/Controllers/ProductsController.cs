@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceApp.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductsController : ControllerBase
     {
         private static List<Product> Products = new List<Product> 
         {
@@ -15,19 +15,13 @@ namespace ECommerceApp.Controllers
             new Product { Id= 2, Name = "Moletom", Description = "Com touca", Price = 230, Stock = 15}
         };
 
-        //List products
-        public IActionResult Index()
-        {
-            return View(Products);
-        }
-
         //Creating product
         [HttpPost]
         public IActionResult Create (Product product)
         {
             product.Id = Products.Count + 1;
             Products.Add(product);
-            return RedirectToAction("Index");
+            return Ok();
         }
 
     }
