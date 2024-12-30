@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using ECommerceApp.Entities;
-using Product = ECommerceApp.Models.Product;
 
 namespace ECommerceApp.Data
 {

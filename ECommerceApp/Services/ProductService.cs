@@ -7,7 +7,7 @@ using ECommerceApp.Models;
 
 namespace ECommerceApp.Services
 {
-    public class ProductService : IProductService
+    public class ProductService
     {
         private readonly ApplicationDbContext _context;
         public ProductService(ApplicationDbContext context)
@@ -15,6 +15,7 @@ namespace ECommerceApp.Services
             _context = context;
         }
 
+        /*
         public IEnumerable<Product> GetAll()
         {
             return _context.Products.ToList();
@@ -25,6 +26,6 @@ namespace ECommerceApp.Services
             _context.Products.Add(product);
             _context.SaveChanges();
         }
-
+        */
     }
 }
