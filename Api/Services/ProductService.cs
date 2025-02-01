@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ECommerceApp.Data;
-using ECommerceApp.Models;
+using ECommerceApp.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.Services
 {
-    public class ProductService
+    //TODO: Refatorar para utilizar o padrao repository
+    public class ProductService : IProductService
     {
         private readonly ApplicationDbContext _context;
         public ProductService(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<Product>> GetAll()
+        {
+            return await _context.Products.ToListAsync();
         }
 
         /*
