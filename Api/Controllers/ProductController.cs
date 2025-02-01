@@ -6,7 +6,7 @@ namespace Api.Controllers;
 [Route("[controller]")]
 public class ProductController : ControllerBase
 {
-    [HttpGet(Name = "GetWeatherForecast")]
+    [HttpGet]
     public void Get()
     {
     }
