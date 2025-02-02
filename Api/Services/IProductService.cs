@@ -8,6 +8,7 @@ namespace ECommerceApp.Services
 {
     public interface IProductService
     {
-        Task<IEnumerable<Product>> GetAll();
+        Task<IEnumerable<Product>> GetAllAsync();
+        Task AddAsync(Product product);
     }
 }
