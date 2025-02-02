@@ -1,5 +1,6 @@
 using ECommerceApp.Data;
 using ECommerceApp.Entities;
+using ECommerceApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.Services
@@ -18,8 +19,14 @@ namespace ECommerceApp.Services
             return await _context.Products.ToListAsync();
         }
         
-        public async Task AddAsync(Product product)
+        public async Task AddAsync(ProductModel productModel)
         {
+            var product = new Product(
+                productModel.Name,
+                productModel.Description,
+                productModel.Price,
+                productModel.Stock);
+            
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
         }
