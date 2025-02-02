@@ -1,4 +1,5 @@
 using ECommerceApp.Data;
+using ECommerceApp.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,10 @@ else
 }
 
 builder.Services.AddControllers();
+
+//Dependency injection de Services
+builder.Services.AddScoped<IProductService, ProductService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

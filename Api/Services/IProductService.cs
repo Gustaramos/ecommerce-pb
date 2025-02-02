@@ -10,5 +10,6 @@ namespace ECommerceApp.Services
     {
         Task<IEnumerable<Product>> GetAllAsync();
         Task AddAsync(Product product);
+        Task UpdateAsync(Product product);
     }
 }

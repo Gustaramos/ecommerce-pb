@@ -23,5 +23,24 @@ namespace ECommerceApp.Services
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateAsync(Product productToUpdate)
+        {
+            var product = await _context
+                .Products
+                .FirstOrDefaultAsync(p => p.Id == productToUpdate.Id);
+
+            if (product is not null)
+            {
+                product.Description = productToUpdate.Description;
+                product.Name = productToUpdate.Name;
+                product.Stock = productToUpdate.Stock;
+                product.Price = productToUpdate.Price;
+                
+                _context.Update(product);
+            }
+            
+            await _context.SaveChangesAsync();
+        }
     }
 }
