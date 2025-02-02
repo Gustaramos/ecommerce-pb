@@ -1,4 +1,5 @@
 using ECommerceApp.Entities;
+using ECommerceApp.Models;
 using ECommerceApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,10 +26,11 @@ public class ProductController : ControllerBase
     
     [HttpPost]
     public async Task<IActionResult> AddAsync(
-        [FromBody] Product product)
+        [FromBody] ProductModel product)
     {
         await _productService.AddAsync(product);
-        return Ok();
+        //TODO: definir o que ira retornar
+        return Ok(product);
     }
 
     [HttpPut]
