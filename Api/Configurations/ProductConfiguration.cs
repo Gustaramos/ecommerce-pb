@@ -32,6 +32,12 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .Property(b => b.Stock)
             .HasColumnName("Stock")
             .IsRequired();
+        
+        builder
+            .HasMany(p => p.Attachments)
+            .WithOne(a => a.Product)
+            .HasForeignKey(a => a.Key)
+            .IsRequired();
 
         builder.ToTable("Product", "product");
     }

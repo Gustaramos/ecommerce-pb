@@ -14,6 +14,7 @@ namespace ECommerceApp.Data
         }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

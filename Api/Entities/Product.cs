@@ -7,6 +7,8 @@ public class Product : BaseEntity
     public decimal Price { get; set; }
     public int Stock { get; set; }
 
+    public IEnumerable<Attachment> Attachments { get; set; } = [];
+
     public Product(
         string name,
         string description,

@@ -21,11 +21,15 @@ namespace ECommerceApp.Services
         
         public async Task AddAsync(ProductModel productModel)
         {
+            var uploadFiles = await UploadFilesAsync(productModel.Files);
+            
             var product = new Product(
                 productModel.Name,
                 productModel.Description,
                 productModel.Price,
                 productModel.Stock);
+
+            product.Attachments = uploadFiles;
             
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
@@ -48,6 +52,28 @@ namespace ECommerceApp.Services
             }
             
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Attachment>> UploadFilesAsync(IEnumerable<IFormFile> files)
+        {
+            //TODO: Quando tiver um servidor pra guardar os arquivos
+            //mudar essa parte, para realizar o upload no servidor tbm
+
+            var filesToUpload = files
+                .Select(a => 
+                    new Attachment(
+                        Guid.NewGuid(), 
+                            a.ContentType,
+                        a.FileName,
+                        a.Length));
+
+            await _context
+                .Attachments
+                .AddRangeAsync(filesToUpload);
+
+            await _context.SaveChangesAsync();
+
+            return filesToUpload;
         }
     }
 }
