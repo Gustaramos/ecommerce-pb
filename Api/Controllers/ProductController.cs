@@ -26,7 +26,7 @@ public class ProductController : ControllerBase
     
     [HttpPost]
     public async Task<IActionResult> AddAsync(
-        [FromBody] ProductModel product)
+        [FromForm] ProductModel product)
     {
         await _productService.AddAsync(product);
         //TODO: definir o que ira retornar
