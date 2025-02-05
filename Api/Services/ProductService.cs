@@ -28,8 +28,6 @@ namespace ECommerceApp.Services
                 productModel.Description,
                 productModel.Price,
                 productModel.Stock);
-
-            product.Attachments = uploadFiles;
             
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
@@ -59,10 +57,10 @@ namespace ECommerceApp.Services
             //TODO: Quando tiver um servidor pra guardar os arquivos
             //mudar essa parte, para realizar o upload no servidor tbm
 
-            var filesToUpload = files
+            /*var filesToUpload = files
                 .Select(a => 
                     new Attachment(
-                        Guid.NewGuid(), 
+                        Guid.NewGuid(),
                             a.ContentType,
                         a.FileName,
                         a.Length));
@@ -73,7 +71,9 @@ namespace ECommerceApp.Services
 
             await _context.SaveChangesAsync();
 
-            return filesToUpload;
+            return filesToUpload;*/
+
+            throw new NotImplementedException();
         }
     }
 }

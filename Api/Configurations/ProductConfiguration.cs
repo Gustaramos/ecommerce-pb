@@ -11,6 +11,10 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasKey(b => b.Id);
 
         builder
+            .Property(p => p.Id)
+            .ValueGeneratedNever();
+
+        builder
             .Property(b => b.Name)
             .HasColumnName("Name")
             .HasMaxLength(100)
@@ -32,12 +36,11 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .Property(b => b.Stock)
             .HasColumnName("Stock")
             .IsRequired();
-        
+
         builder
-            .HasMany(p => p.Attachments)
+            .HasMany(p => p.AttachmentProducts)
             .WithOne(a => a.Product)
-            .HasForeignKey(a => a.Key)
-            .IsRequired();
+            .HasForeignKey(a => a.ProductId);
 
         builder.ToTable("Product", "product");
     }

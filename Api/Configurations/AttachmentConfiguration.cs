@@ -10,6 +10,10 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
     {
         builder.HasKey(a => a.Id);
 
+        builder
+            .Property(a => a.Id)
+            .ValueGeneratedNever();
+
         builder.Property(a => a.Key)
             .HasColumnName("Key")
             .ValueGeneratedNever();
@@ -30,13 +34,12 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
             .Property(a => a.Size)
             .HasColumnName("Size")
             .IsRequired();
-        
-        builder
-            .HasOne(a => a.Product)
-            .WithMany(p => p.Attachments)
-            .HasForeignKey(a => a.Key)
-            .IsRequired();
 
+        builder
+            .HasOne(a => a.AttachmentProduct)
+            .WithOne(b => b.Attachment)
+            .HasForeignKey<Attachment>(a => a.AttachmentProductId);
+        
         builder.ToTable("Attachment", "product");
     }
 }

@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ECommerceApp.Migrations
+namespace Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250205014739_add-attachment")]
-    partial class addattachment
+    [Migration("20250211021022_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,9 @@ namespace ECommerceApp.Migrations
             modelBuilder.Entity("ECommerceApp.Entities.Attachment", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AttachmentProductId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("ContentType")
@@ -59,15 +61,39 @@ namespace ECommerceApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Key");
-
                     b.ToTable("Attachment", "product");
+                });
+
+            modelBuilder.Entity("ECommerceApp.Entities.AttachmentProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AttachmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttachmentId")
+                        .IsUnique();
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("AttachmentProduct", "product");
                 });
 
             modelBuilder.Entity("ECommerceApp.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -102,20 +128,33 @@ namespace ECommerceApp.Migrations
                     b.ToTable("Product", "product");
                 });
 
-            modelBuilder.Entity("ECommerceApp.Entities.Attachment", b =>
+            modelBuilder.Entity("ECommerceApp.Entities.AttachmentProduct", b =>
                 {
-                    b.HasOne("ECommerceApp.Entities.Product", "Product")
-                        .WithMany("Attachments")
-                        .HasForeignKey("Key")
+                    b.HasOne("ECommerceApp.Entities.Attachment", "Attachment")
+                        .WithOne("AttachmentProduct")
+                        .HasForeignKey("ECommerceApp.Entities.AttachmentProduct", "AttachmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ECommerceApp.Entities.Product", "Product")
+                        .WithMany("AttachmentProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attachment");
 
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ECommerceApp.Entities.Attachment", b =>
+                {
+                    b.Navigation("AttachmentProduct");
+                });
+
             modelBuilder.Entity("ECommerceApp.Entities.Product", b =>
                 {
-                    b.Navigation("Attachments");
+                    b.Navigation("AttachmentProducts");
                 });
 #pragma warning restore 612, 618
         }
