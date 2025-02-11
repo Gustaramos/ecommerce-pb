@@ -38,7 +38,7 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
         builder
             .HasOne(a => a.AttachmentProduct)
             .WithOne(b => b.Attachment)
-            .HasForeignKey<Attachment>(a => a.AttachmentProductId);
+            .HasForeignKey<AttachmentProduct>(a => a.AttachmentId);
         
         builder.ToTable("Attachment", "product");
     }

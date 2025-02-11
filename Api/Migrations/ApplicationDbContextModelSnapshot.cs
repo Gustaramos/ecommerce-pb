@@ -27,9 +27,6 @@ namespace Api.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AttachmentProductId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("ContentType")
                         .IsRequired()
                         .HasMaxLength(5)
