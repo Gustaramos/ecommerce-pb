@@ -26,17 +26,18 @@ public class ProductController : ControllerBase
     
     [HttpPost]
     public async Task<IActionResult> AddAsync(
-        [FromForm] ProductModel product)
+        [FromForm] ProductModel product,
+        CancellationToken cancellationToken)
     {
-        await _productService.AddAsync(product);
+        await _productService.AddAsync(product, cancellationToken);
         //TODO: definir o que ira retornar
         return Ok(product);
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync([FromBody] Product product)
+    public async Task<IActionResult> UpdateAsync([FromBody] Product product, CancellationToken cancellationToken)
     {
-        await _productService.UpdateAsync(product);
+        await _productService.UpdateAsync(product, cancellationToken);
         return Ok();
     }
 }

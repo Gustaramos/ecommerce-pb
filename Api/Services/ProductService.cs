@@ -17,28 +17,47 @@ namespace ECommerceApp.Services
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return await _context.Products.ToListAsync();
+            return await _context
+                .Products
+                .ToListAsync();
         }
         
-        public async Task AddAsync(ProductModel productModel)
+        public async Task AddAsync(ProductModel productModel, CancellationToken cancellationToken)
         {
-            var uploadFiles = await UploadFilesAsync(productModel.Files);
-
-            var product = await AddProductAsync(new ProductDto
-            {
-                Description = productModel.Description,
-                Name = productModel.Name,
-                Price = productModel.Price,
-                Stock = productModel.Stock
-            });
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             
-            await SaveAttachmentProductsAsync(
-                product.Id,
-                uploadFiles
-                    .Select(a => a.Id));
+            try
+            {
+                var uploadFiles = await UploadFilesAsync(productModel.Files, cancellationToken);
+
+                foreach (var upload in uploadFiles)
+                {
+                    var teste = await _context.Attachments.ToListAsync(cancellationToken);
+                }
+                
+                var product = await AddProductAsync(new ProductDto
+                {
+                    Description = productModel.Description,
+                    Name = productModel.Name,
+                    Price = productModel.Price,
+                    Stock = productModel.Stock
+                }, cancellationToken);
+            
+                await SaveAttachmentProductsAsync(
+                    product.Id,
+                    uploadFiles
+                        .Select(a => a.Id),
+                    cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+            }
         }
 
-        public async Task UpdateAsync(Product productToUpdate)
+        public async Task UpdateAsync(Product productToUpdate, CancellationToken cancellationToken)
         {
             var product = await _context
                 .Products
@@ -52,17 +71,18 @@ namespace ECommerceApp.Services
                 product.Price = productToUpdate.Price;
                 
                 _context.Update(product);
+                
+                await _context.SaveChangesAsync(cancellationToken);
             }
-            
-            await _context.SaveChangesAsync();
         }
 
-        private async Task<IEnumerable<Attachment>> UploadFilesAsync(IEnumerable<IFormFile> files)
+        private async Task<IEnumerable<Attachment>> UploadFilesAsync(IEnumerable<IFormFile> files, CancellationToken cancellationToken)
         {
             //TODO: Quando tiver um servidor pra guardar os arquivos
             //mudar essa parte, para realizar o upload no servidor tbm
-
-             var filesToUpload = files
+            
+            //Entender pq esse tracho nao deu certo
+             /*var filesToUpload = files
                  .Select(a => 
                      new Attachment(
                          Guid.NewGuid(),
@@ -70,30 +90,65 @@ namespace ECommerceApp.Services
                          a.FileName,
                          a.Length));
 
-             await _context
-                 .Attachments
-                 .AddRangeAsync(filesToUpload);
+             var teste = filesToUpload.Select(a => a.Id);
+             
+             Console.WriteLine($"Gerado antes do entity: {string.Join(',', teste)}");*/
+             var teste = new List<Attachment>();
+             
+             foreach (var file in files)
+             {
+                 
+                 var attachment = new Attachment(
+                     Guid.NewGuid(),
+                     file.ContentType,
+                     file.FileName,
+                     file.Length);
+                 
+                 Console.WriteLine($"Gerado ao antes do entity: {string.Join(',', attachment.Id)}");
+                 
+                 teste.Add(attachment);
+                 
+                 await _context
+                     .Attachments
+                     .AddAsync(attachment, cancellationToken);
+                 
+                 Console.WriteLine($"Gerado ao depois do entity: {string.Join(',', attachment.Id)}");
+             }
+             
+             var testeAdd = teste.Select(a => a.Id);
+             
+             Console.WriteLine($"Gerado ao add do entity: {string.Join(',', testeAdd)}");
 
-             await _context.SaveChangesAsync();
+             await _context.SaveChangesAsync(cancellationToken);
+             
+             var testeDepois = teste.Select(a => a.Id);
+             
+             Console.WriteLine($"Gerado depois do entity: {string.Join(',', testeDepois)}");
 
-             return filesToUpload;
+             return teste;
         }
 
         private async Task SaveAttachmentProductsAsync(
             Guid productId,
-            IEnumerable<Guid> attachmentIds)
+            IEnumerable<Guid> attachmentIds,
+            CancellationToken cancellationToken)
         {
-            var attachmentProducts = attachmentIds
-                .Select(a => new AttachmentProduct(productId, a));
+            var attachmentProducts = new List<AttachmentProduct>();
 
-            await _context
-                .AttachmentProducts
-                .AddRangeAsync(attachmentProducts);
-
-            await _context.SaveChangesAsync();
+            foreach (var attachmentId in attachmentIds)
+            {
+                var attachmentProduct = new AttachmentProduct(productId, attachmentId);
+                
+                attachmentProducts.Add(attachmentProduct);
+                
+                _context
+                    .AttachmentProducts
+                    .Add(attachmentProduct);
+            }
+            await _context.SaveChangesAsync(cancellationToken);
         }
         
-        private async Task<Product> AddProductAsync(ProductDto productDto)
+        private async Task<Product> AddProductAsync(ProductDto productDto, CancellationToken cancellationToken)
         {
             var product = new Product(
                 productDto.Name,
@@ -103,7 +158,8 @@ namespace ECommerceApp.Services
 
             
             _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+
+            await _context.SaveChangesAsync(cancellationToken);
 
             return product;
         }

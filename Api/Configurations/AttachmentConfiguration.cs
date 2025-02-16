@@ -9,9 +9,10 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
     public void Configure(EntityTypeBuilder<Attachment> builder)
     {
         builder.HasKey(a => a.Id);
-
+        
         builder
             .Property(a => a.Id)
+            .HasColumnName("Id")
             .ValueGeneratedNever();
 
         builder.Property(a => a.Key)
@@ -27,7 +28,7 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
         builder
             .Property(a => a.ContentType)
             .HasColumnName("ContentType")
-            .HasMaxLength(5)
+            .HasMaxLength(100)
             .IsRequired();
         
         builder
@@ -38,7 +39,7 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
         builder
             .HasOne(a => a.AttachmentProduct)
             .WithOne(b => b.Attachment)
-            .HasForeignKey<AttachmentProduct>(a => a.AttachmentId);
+            .HasForeignKey<AttachmentProduct>(b => b.AttachmentId);
         
         builder.ToTable("Attachment", "product");
     }

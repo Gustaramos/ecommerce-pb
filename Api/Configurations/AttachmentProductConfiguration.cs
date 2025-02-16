@@ -9,9 +9,10 @@ public class AttachmentProductConfiguration : IEntityTypeConfiguration<Attachmen
     public void Configure(EntityTypeBuilder<AttachmentProduct> builder)
     {
         builder.HasKey(a => a.Id);
-
+        
         builder
             .Property(a => a.Id)
+            .HasColumnName("Id")
             .ValueGeneratedNever();
 
         builder
@@ -22,7 +23,7 @@ public class AttachmentProductConfiguration : IEntityTypeConfiguration<Attachmen
         builder
             .HasOne(a => a.Attachment)
             .WithOne(b => b.AttachmentProduct)
-            .HasForeignKey<AttachmentProduct>(a => a.AttachmentId);
+            .HasForeignKey<AttachmentProduct>(b => b.AttachmentId);
         
         builder.ToTable("AttachmentProduct", "product");
     }

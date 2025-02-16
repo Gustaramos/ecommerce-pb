@@ -23,7 +23,7 @@ namespace ECommerceApp.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach(var entry in ChangeTracker.Entries<BaseEntity>())
             {
@@ -38,7 +38,7 @@ namespace ECommerceApp.Data
                 }
             }
 
-            int result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return result;
         }

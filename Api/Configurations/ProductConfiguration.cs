@@ -9,9 +9,10 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
     public void Configure(EntityTypeBuilder<Product> builder)
     {
         builder.HasKey(b => b.Id);
-
+        
         builder
-            .Property(p => p.Id)
+            .Property(a => a.Id)
+            .HasColumnName("Id")
             .ValueGeneratedNever();
 
         builder
