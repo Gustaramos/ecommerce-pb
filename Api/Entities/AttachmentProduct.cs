@@ -7,8 +7,6 @@ public class AttachmentProduct : BaseEntity
     
     public Product? Product { get; private set; }
     public Attachment? Attachment { get; private set; }
-    
-    protected AttachmentProduct(){}
 
     public AttachmentProduct(
         Guid productId,

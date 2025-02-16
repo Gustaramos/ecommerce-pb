@@ -8,8 +8,6 @@ public class Product : BaseEntity
     public int Stock { get; set; }
 
     public ICollection<AttachmentProduct> AttachmentProducts { get; private set; } = [];
-    
-    protected Product(){}
 
     public Product(
         string name,

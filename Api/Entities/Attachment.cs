@@ -9,8 +9,6 @@ public class Attachment : BaseEntity
     
     public AttachmentProduct? AttachmentProduct { get; private set; }
     
-    protected Attachment(){}
-    
     public Attachment(
         Guid key,
         string contentType,
